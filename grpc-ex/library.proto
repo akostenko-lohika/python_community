@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package server;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service Library {
+
+    // ListBooks returns all Books
+    rpc ListBooks(google.protobuf.Empty) returns (BookList) {
+        option (google.api.http) = {
+            get: "/api/v1/books"
+        };
+    }
+
+    // GetBook returns book by isbn
+    rpc GetBook(BookRequest) returns (Book) {
+        option (google.api.http) = {
+            get: "/api/v1/books/{isbn}"
+        };
+    }
+
+    // AddBook allows to add a book
+    rpc AddBook(BookRequest) returns (Book) {
+        option (google.api.http) = {
+            post: "/api/v1/books"
+            body: "*"
+        };
+    }
+
+    // UpdateBook allows to update a book
+    rpc UpdateBook(BookRequest) returns (Book) {
+        option (google.api.http) = {
+            put: "/api/v1/books/{isbn}"
+            body: "*"
+        };
+    }
+
+    // DeleteBook deletes book identified by isbn
+    rpc DeleteBook(BookRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            delete: "/api/v1/books/{isbn}"
+        };
+    }
+}
+
+message Book {
+    string isbn = 1;
+    string title = 2;
+    string author = 3;
+}
+
+message BookRequest {
+    string isbn = 1;
+    string title = 2;
+    string author = 3;
+}
+
+message BookList {
+    repeated Book books = 1;
+}
